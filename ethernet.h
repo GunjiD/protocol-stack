@@ -10,10 +10,17 @@
 #define ETH_P_ALL 0x0003
 #define ADDR_LEN 6
 
-struct ethernet_hdr;
-typedef struct ethernet_hdr Eth_h;
+//typedef struct ethernet_hdr Eth_h;
+
+typedef struct ethernet_hdr
+{
+        uint8_t dest[ADDR_LEN];
+        uint8_t src[ADDR_LEN];
+        uint16_t ethehertype;
+} Eth_h;
 
 char *dest_addr(Eth_h *eth_hdr);
 char *src_addr(Eth_h *eth_hdr);
+char *return_addr(char *address);
 
 #endif
