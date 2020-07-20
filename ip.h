@@ -11,20 +11,20 @@
 
 typedef struct ip_hdr
 {
-    version 4bit
-    ihl 4bit
-    type of service 8bit
-    total length 16bit
-    identification 16bit
-    flags 3bit
-    fragment offset 13bit
-    time to live 8bit
-    protocol 8bit
-    header checksum 16bit
-    source address 32bit
-    destination address 32bit
-    options 
-    padding
+    uint8_t version:4;
+    uint8_t ihl:4;
+    uint8_t type_of_service;
+    uint16_t total_length;
+    uint16_t identification;
+    uint16_t flags:3;
+    uint16_t fragment_offset:13;
+    uint8_t ttl;
+    uint8_t protocol;
+    uint16_t hdr_checksum;
+    uint32_t source_address;
+    uint32_t destination_address;
+//    options 
+//    padding
 } Ip_h;
 
 #endif
