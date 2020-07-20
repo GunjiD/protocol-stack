@@ -48,7 +48,7 @@ int create_socket(){
         ioctl(sock, SIOCSIFFLAGS, &if_set_pm);
         // socket の設定を行う。 man getsockopt(2)
         // インターフェースの名前はOS毎に違うので要注意
-        if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, "enp9s0", IFNAMSIZ - 1) == -1){
+        if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, "eth0", IFNAMSIZ - 1) == -1){
                 // エラー時には -1
                 printf("not setting socket\n");
                 return 1;
@@ -62,8 +62,10 @@ while(1){
         
         printf("Ethernet Header\n");
         // 宛先アドレスの MAC アドレスを表示
-        printf("destination address : %s\n", dest_addr(eth_h));
-        printf("source address      : %s\n", src_addr(eth_h));
+        printf("destination address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
+                        eth_h->dest[0],eth_h->dest[1],eth_h->dest[2],eth_h->dest[3],eth_h->dest[4],eth_h->dest[5]);
+        printf("source address      : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
+                        eth_h->src[0],eth_h->src[1],eth_h->src[2],eth_h->src[3],eth_h->src[4],eth_h->src[5]);
         printf("Packet Type ID : %d\n", eth_h->ethehertype);
         printf("packet %lu bytes\n", recv_byte);
         printf("==================================================\n");
