@@ -7,11 +7,11 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <net/if.h>
-#include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <netinet/tcp.h>
 
 #include "ethernet.h"
+#include "ip.h"
 
 #define BUF_SIZ 65536
 
@@ -48,7 +48,7 @@ int create_socket(){
         ioctl(sock, SIOCSIFFLAGS, &if_set_pm);
         // socket の設定を行う。 man getsockopt(2)
         // インターフェースの名前はOS毎に違うので要注意
-        if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, "eth0", IFNAMSIZ - 1) == -1){
+        if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, "enp9s0", IFNAMSIZ - 1) == -1){
                 // エラー時には -1
                 printf("not setting socket\n");
                 return 1;
@@ -60,6 +60,7 @@ while(1){
         // ethhdr については if_ether.h を参照
         struct ethernet_hdr *eth_h = (struct ethernet_hdr*)(buffer);        
         
+        // Ethernet Header の解析
         printf("Ethernet Header\n");
         // 宛先アドレスの MAC アドレスを表示
         printf("destination address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
@@ -68,6 +69,24 @@ while(1){
                         eth_h->src[0],eth_h->src[1],eth_h->src[2],eth_h->src[3],eth_h->src[4],eth_h->src[5]);
         printf("Packet Type ID : %d\n", eth_h->ethehertype);
         printf("packet %lu bytes\n", recv_byte);
+        printf("==================================================\n");
+        
+        // IP Header の解析
+        struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(struct ethernet_hdr));
+
+        char ip_src[IP_STR_LEN];
+        char ip_dest[IP_STR_LEN];
+        ip_ntop(ip_h->source_address, ip_src);
+        ip_ntop(ip_h->destination_address, ip_dest);
+        
+        printf("IP Header\n");
+        printf("Version        : %d\n", ip_h->version);
+        printf("IHL            : %d Bytes\n", (ip_h->ihl)*4);
+        printf("Total Length   : %d Bytes\n", ntohs(ip_h->total_length));
+        printf("Time To Live   : %d \n", ip_h->ttl);
+        printf("Protocol       : %d \n", ip_h->protocol);
+        printf("destination IP : %s\n", ip_dest);
+        printf("source IP      : %s\n", ip_src);
         printf("==================================================\n");
 }
 }
