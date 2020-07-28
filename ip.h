@@ -1,5 +1,5 @@
-#ifndef ETHERNET_H
-#define ETHERNET_H
+#ifndef IP_H
+#define IP_H
 
 #include <string.h>
 #include <arpa/inet.h>
@@ -7,7 +7,9 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 
+#include "ethernet.h"
 
+#define IP_LEN 4
 
 typedef struct ip_hdr
 {
@@ -26,5 +28,7 @@ typedef struct ip_hdr
 //    options 
 //    padding
 } Ip_h;
+
+void ip_ntop(uint32_t src, char *dest);
 
 #endif
