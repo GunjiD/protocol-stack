@@ -20,7 +20,7 @@ int sock;
 // 受信したパケットのバイト数を格納
 ssize_t recv_byte;
 
-int create_socket(int set_sock, char *interface, char *interface_name);
+int create_socket(char *interface, char *interface_name);
 
 int main(int argc, char *argv[]){
         
@@ -28,12 +28,11 @@ int main(int argc, char *argv[]){
         struct sockaddr saddr;
         socklen_t saddr_len = sizeof(saddr);
 
-
         // パケットを受信する
         unsigned char *buffer = (unsigned char *) malloc(BUF_SIZ);
         memset(buffer,0, BUF_SIZ);
 
-        sock = create_socket(sock, "eth0", "enp9s0");
+        sock = create_socket("eth0", "enp9s0");
 
 while(1){
         recv_byte = recvfrom(sock, buffer, BUF_SIZ, 0, &saddr, &saddr_len);
@@ -74,23 +73,23 @@ while(1){
 return 0;
 }
 
-int create_socket(int set_sock, char *interface, char *interface_name){
+int create_socket(char *interface, char *interface_name){
 
         // socket の file descriptor を開く
-        set_sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+        int set_sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
         // インターフェースの設定を行う構造体
         struct ifreq if_set_pm;
         // インターフェースの指定
         strncpy(if_set_pm.ifr_name, interface, IFNAMSIZ - 1);
         // 現在の状態を取得
         ioctl(sock, SIOCGIFFLAGS, &if_set_pm);
-        // or でビットを立てる
+        // プロミスキャスモードに変更
         if_set_pm.ifr_flags |= IFF_PROMISC;
         
         if(setsockopt(set_sock, SOL_SOCKET, SO_BINDTODEVICE, interface_name, IFNAMSIZ - 1) == -1){
                 // エラー時には -1
                 printf("not setting socket\n");
-                return 1;
+                exit(0);
         }
         return set_sock;
 }
