@@ -1,3 +1,4 @@
+
 #include <string.h>
 #include <arpa/inet.h>
 #include <stdio.h>
@@ -15,44 +16,24 @@
 
 #define BUF_SIZ 65536
 
-int create_socket();
+int sock;
+// 受信したパケットのバイト数を格納
+ssize_t recv_byte;
+
+int create_socket(int set_sock, char *interface, char *interface_name);
 
 int main(int argc, char *argv[]){
-
-create_socket();
-
-return 0;
-}
-
-int create_socket(){
-        // socket の file descriptor を開く
-        int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-        // インターフェースの設定を行う構造体
-        struct ifreq if_set_pm;
+        
         // プロトコルの情報が格納される
         struct sockaddr saddr;
         socklen_t saddr_len = sizeof(saddr);
-        // 受信したパケットのバイト数を格納
-        ssize_t recv_byte;
+
+
         // パケットを受信する
         unsigned char *buffer = (unsigned char *) malloc(BUF_SIZ);
         memset(buffer,0, BUF_SIZ);
 
-        // インターフェースの指定
-        strncpy(if_set_pm.ifr_name, "eth0", IFNAMSIZ - 1);
-        // 現在の状態を取得
-        ioctl(sock, SIOCGIFFLAGS, &if_set_pm);
-        // or でビットを立てる
-        if_set_pm.ifr_flags |= IFF_PROMISC;
-        // プロミスキャスモードの反映
-        ioctl(sock, SIOCSIFFLAGS, &if_set_pm);
-        // socket の設定を行う。 man getsockopt(2)
-        // インターフェースの名前はOS毎に違うので要注意
-        if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, "enp9s0", IFNAMSIZ - 1) == -1){
-                // エラー時には -1
-                printf("not setting socket\n");
-                return 1;
-        }
+        sock = create_socket(sock, "eth0", "enp9s0");
 
 while(1){
         recv_byte = recvfrom(sock, buffer, BUF_SIZ, 0, &saddr, &saddr_len);
@@ -69,7 +50,7 @@ while(1){
                         eth_h->src[0],eth_h->src[1],eth_h->src[2],eth_h->src[3],eth_h->src[4],eth_h->src[5]);
         printf("Packet Type ID : %d\n", eth_h->ethehertype);
         printf("packet %lu bytes\n", recv_byte);
-        printf("==================================================\n");
+        printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
         
         // IP Header の解析
         struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(struct ethernet_hdr));
@@ -89,4 +70,27 @@ while(1){
         printf("source IP      : %s\n", ip_src);
         printf("==================================================\n");
 }
+
+return 0;
+}
+
+int create_socket(int set_sock, char *interface, char *interface_name){
+
+        // socket の file descriptor を開く
+        set_sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+        // インターフェースの設定を行う構造体
+        struct ifreq if_set_pm;
+        // インターフェースの指定
+        strncpy(if_set_pm.ifr_name, interface, IFNAMSIZ - 1);
+        // 現在の状態を取得
+        ioctl(sock, SIOCGIFFLAGS, &if_set_pm);
+        // or でビットを立てる
+        if_set_pm.ifr_flags |= IFF_PROMISC;
+        
+        if(setsockopt(set_sock, SOL_SOCKET, SO_BINDTODEVICE, interface_name, IFNAMSIZ - 1) == -1){
+                // エラー時には -1
+                printf("not setting socket\n");
+                return 1;
+        }
+        return set_sock;
 }
