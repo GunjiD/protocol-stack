@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
         unsigned char *buffer = (unsigned char *) malloc(BUF_SIZ);
         memset(buffer,0, BUF_SIZ);
 
-        sock = create_socket("eth0", "enp9s0");
+        sock = create_socket("enp9s0");
 
 while(1){
         recv_byte = recvfrom(sock, buffer, BUF_SIZ, 0, &saddr, &saddr_len);
@@ -73,21 +73,18 @@ while(1){
 return 0;
 }
 
-int create_socket(char *interface, char *interface_name){
+int create_socket(char *interface_name){
 
         // socket の file descriptor を開く
         int set_sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
         // インターフェースの設定を行う構造体
         struct ifreq if_set_pm;
-        // インターフェースの指定
-        strncpy(if_set_pm.ifr_name, interface, IFNAMSIZ - 1);
         // 現在の状態を取得
         ioctl(sock, SIOCGIFFLAGS, &if_set_pm);
         // プロミスキャスモードに変更
         if_set_pm.ifr_flags |= IFF_PROMISC;
         
         if(setsockopt(set_sock, SOL_SOCKET, SO_BINDTODEVICE, interface_name, IFNAMSIZ - 1) == -1){
-                // エラー時には -1
                 printf("not setting socket\n");
                 exit(0);
         }
