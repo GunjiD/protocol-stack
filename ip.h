@@ -28,4 +28,6 @@ typedef struct ip_hdr
 //    padding
 } Ip_h;
 
+void ip_hdr_dbg(struct ip_hdr *ip_header);
+
 #endif
