@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "ip.h"
 
 uint16_t ntohs(uint16_t network_short){
 
@@ -44,4 +45,15 @@ uint32_t htonl(uint32_t host_long){
     }
 
     return tmp;    
+}
+
+void ip_hdr_ntoh(struct ip_hdr *ip_header){
+        uint8_t tmp_ip_ver = ip_header->version;
+        ip_header->version = ip_header->ihl;
+        ip_header->ihl = tmp_ip_ver;
+        ip_header->total_length = htons(ip_header->total_length);
+        ip_header->fragment_offset = htonl(ip_header->fragment_offset);
+        ip_header->hdr_checksum = htons(ip_header->hdr_checksum);
+        ip_header->source_address = htonl(ip_header->source_address);
+        ip_header->destination_address = htonl(ip_header->destination_address);
 }
