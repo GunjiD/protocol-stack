@@ -28,6 +28,4 @@ typedef struct ip_hdr
 //    padding
 } Ip_h;
 
-void ip_ntop(uint32_t src, char *dest);
-
 #endif

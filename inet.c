@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "ip.h"
 
+
 uint16_t ntohs(uint16_t network_short){
 
     uint16_t tmp = 0;
@@ -45,6 +46,12 @@ uint32_t htonl(uint32_t host_long){
     }
 
     return tmp;    
+}
+
+void ip_ntop(u_int32_t src, char *dest){
+    u_char addr[16];
+    sprintf(addr,"%u.%u.%u.%u",(src >>  0) & 0xFF,(src >>  8) & 0xFF,(src >>  16) & 0xFF,(src >>  24) & 0xFF);
+    strcpy(dest, addr);    
 }
 
 void ip_hdr_ntoh(struct ip_hdr *ip_header){
