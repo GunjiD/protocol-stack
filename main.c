@@ -1,6 +1,5 @@
 
 #include <string.h>
-#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -13,6 +12,7 @@
 
 #include "ethernet.h"
 #include "ip.h"
+#include "inet.h"
 
 #define BUF_SIZ 65536
 
@@ -20,7 +20,7 @@ int sock;
 // 受信したパケットのバイト数を格納
 ssize_t recv_byte;
 
-int create_socket(char *interface, char *interface_name);
+int create_socket(char *interface_name);
 
 int main(int argc, char *argv[]){
         
@@ -56,8 +56,8 @@ while(1){
 
         char ip_src[IP_STR_LEN];
         char ip_dest[IP_STR_LEN];
-        ip_ntop(ip_h->source_address, ip_src);
-        ip_ntop(ip_h->destination_address, ip_dest);
+        ntop(ip_h->source_address, ip_src);
+        ntop(ip_h->destination_address, ip_dest);
         
         printf("IP Header\n");
         printf("Version        : %d\n", ip_h->version);
