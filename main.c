@@ -53,6 +53,8 @@ while(1){
         
         // IP Header の解析
         struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(struct ethernet_hdr));
+        
+        ip_hdr_ntoh(ip_h);
 
         char ip_src[IP_STR_LEN];
         char ip_dest[IP_STR_LEN];
