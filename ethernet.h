@@ -23,4 +23,6 @@ char *dest_addr(Eth_h *eth_hdr);
 char *src_addr(Eth_h *eth_hdr);
 char *return_addr(char *address);
 
+void eth_hdr_dbg(struct ethernet_hdr *eth_header, ssize_t byte);
+
 #endif
