@@ -40,11 +40,14 @@ while(1){
         // ethhdr については if_ether.h を参照
         struct ethernet_hdr *eth_h = (struct ethernet_hdr*)(buffer);        
         
-        eth_hdr_dbg(eth_h, recv_byte);
+//        eth_hdr_dbg(eth_h, recv_byte);
         
         struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(struct ethernet_hdr));
 
-        ip_hdr_dbg(ip_h);
+        ip_hdr_ntoh(ip_h);
+
+        ip_hdr_dbg(ip_h, INTEGER);
+        ip_hdr_dbg(ip_h, HEX);
 }
 
 return 0;
@@ -58,9 +61,11 @@ int create_socket(char *interface_name){
         struct ifreq if_set_pm;
         // 現在の状態を取得
         ioctl(sock, SIOCGIFFLAGS, &if_set_pm);
-        // プロミスキャスモードに変更
-        if_set_pm.ifr_flags |= IFF_PROMISC;
-        
+
+        //if_set_pm.ifr_flags |= IFF_PROMISC;
+        if_set_pm.ifr_flags &= ~IFF_PROMISC;
+
+
         if(setsockopt(set_sock, SOL_SOCKET, SO_BINDTODEVICE, interface_name, IFNAMSIZ - 1) == -1){
                 printf("not setting socket\n");
                 exit(0);
