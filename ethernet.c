@@ -38,6 +38,6 @@ void eth_hdr_dbg(struct ethernet_hdr *eth_header, ssize_t recv_byte){
         printf("source address      : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
                         eth_header->src[0],eth_header->src[1],eth_header->src[2],eth_header->src[3],eth_header->src[4],eth_header->src[5]);
         printf("Packet Type ID : %d\n", eth_header->ethehertype);
-        printf("packet %lu bytes\n", byte);
+        printf("packet %lu bytes\n", recv_byte);
         printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
 }
