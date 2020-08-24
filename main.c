@@ -44,10 +44,10 @@ while(1){
         
         struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(struct ethernet_hdr));
 
-        ip_hdr_ntoh(ip_h);
-
-        ip_hdr_dbg(ip_h, INTEGER);
         ip_hdr_dbg(ip_h, HEX);
+        ip_hdr_ntoh(ip_h);
+        ip_hdr_dbg(ip_h, INTEGER);
+
 }
 
 return 0;
