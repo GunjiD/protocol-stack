@@ -10,6 +10,8 @@
 #include "ethernet.h"
 
 #define IP_STR_LEN 16
+#define HEX 0
+#define INTEGER 1
 
 typedef struct ip_hdr
 {
@@ -28,6 +30,6 @@ typedef struct ip_hdr
 //    padding
 } Ip_h;
 
-void ip_hdr_dbg(struct ip_hdr *ip_header);
+void ip_hdr_dbg(struct ip_hdr *ip_header, int dump_form);
 
 #endif
