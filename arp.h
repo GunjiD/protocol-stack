@@ -2,12 +2,8 @@
 #define ARP_H
 
 #include <string.h>
-#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/socket.h>
-
-#include "ethernet.h"
 
 typedef struct arp_hdr
 {
@@ -16,10 +12,10 @@ typedef struct arp_hdr
         uint8_t hw_addr_len;
         uint8_t protocol_addr_len;
         uint16_t opcode;
-        char sender_hw_addr[ADDR_LEN];
-        char sender_protocol_addr[ADDR_LEN];
-        char target_hw_addr[ADDR_LEN];
-        char target_protocol_addr[ADDR_LEN];
+        unsigned char sender_hw_addr[ADDR_LEN];
+        uint32_t sender_protocol_addr;
+        unsigned char target_hw_addr[ADDR_LEN];
+        uint32_t target_protocol_addr;
 } Arp_h;
 
 void send_arp_request();
