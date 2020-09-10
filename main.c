@@ -9,10 +9,12 @@
 #include <net/if.h>
 #include <netinet/udp.h>
 #include <netinet/tcp.h>
+#include <errno.h>
 
 #include "ethernet.h"
 #include "ip.h"
 #include "inet.h"
+#include "arp.h"
 
 #define BUF_SIZ 65536
 
@@ -35,14 +37,16 @@ int main(int argc, char *argv[]){
         sock = create_socket("enp9s0");
 
 while(1){
+        send_arp_request(sock);
+        break;
         recv_byte = recvfrom(sock, buffer, BUF_SIZ, 0, &saddr, &saddr_len);
         // 受信したパケットを ethdr にキャストして代入する
         // ethhdr については if_ether.h を参照
-        struct ethernet_hdr *eth_h = (struct ethernet_hdr*)(buffer);        
+        ethernet_hdr *eth_h = (ethernet_hdr*)(buffer);        
         
 //        eth_hdr_dbg(eth_h, recv_byte);
         
-        struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(struct ethernet_hdr));
+        struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(ethernet_hdr));
 
         ip_hdr_dbg(ip_h, HEX);
         ip_hdr_ntoh(ip_h);
@@ -55,20 +59,49 @@ return 0;
 
 int create_socket(char *interface_name){
 
-        // socket の file descriptor を開く
-        int set_sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+        int soc;
         // インターフェースの設定を行う構造体
-        struct ifreq if_set_pm;
-        // 現在の状態を取得
-        ioctl(sock, SIOCGIFFLAGS, &if_set_pm);
+        struct ifreq if_req;
+        struct sockaddr_ll sa;
+        
+        if((soc = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL))) == -1){
+                perror("raw_socket");
+                exit(0);
+        }
 
-        //if_set_pm.ifr_flags |= IFF_PROMISC;
-        if_set_pm.ifr_flags &= ~IFF_PROMISC;
+        // set the interface name to ifreq using strncpy
+        strncpy(if_req.ifr_name, interface_name, IFNAMSIZ);
+        if(ioctl(soc, SIOCGIFINDEX, &if_req) == -1){
+                fprintf(stderr, "SIOCGIFINDEX errno %d %s\n", errno, strerror(errno));
+                exit(0);
+        }
 
+        // bind to interface
+        sa.sll_family = PF_PACKET;
+        sa.sll_protocol = htons(ETH_P_ALL);
+        sa.sll_ifindex = if_req.ifr_ifindex;
+        if(bind(soc,(struct sockaddr *) &sa, sizeof(sa)) == -1){
+                perror("bind");
+                exit(0);
+        }
+        
+        //if_req.ifr_flags |= IFF_PROMISC;
+        if_req.ifr_flags &= ~IFF_PROMISC;
 
-        if(setsockopt(set_sock, SOL_SOCKET, SO_BINDTODEVICE, interface_name, IFNAMSIZ - 1) == -1){
+        //set flag of interface to UP
+        if_req.ifr_flags = if_req.ifr_flags | IFF_UP;
+
+        //set flag of interface
+        if(ioctl(soc, SIOCGIFFLAGS, &if_req) == -1){
+                fprintf(stderr, "ioctl: errno %d %s\n", errno, strerror(errno));
+                exit(0);
+        }
+/*
+           setsockopt(soc, IPPROTO_IP, IP_HDRINCL, val, sizeof(one))
+        if(setsockopt(soc, SOL_SOCKET, SO_BINDTODEVICE, interface_name, IFNAMSIZ - 1) == -1){
                 printf("not setting socket\n");
                 exit(0);
         }
-        return set_sock;
+*/
+        return soc;
 }

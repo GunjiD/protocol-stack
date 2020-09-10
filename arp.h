@@ -8,7 +8,7 @@
 #include "ethernet.h"
 #include "ip.h"
 
-typedef struct arp_hdr
+typedef struct ARP_HEADER
 {
         uint16_t hw_addr_space;
         uint16_t protocol_addr_space;
@@ -19,8 +19,8 @@ typedef struct arp_hdr
         uint32_t sender_protocol_addr;
         unsigned char target_hw_addr[ADDR_LEN];
         uint32_t target_protocol_addr;
-} Arp_h;
+} __attribute__((packed)) arp_hdr;
 
-void send_arp_request();
+void send_arp_request(int sd);
 
 #endif
