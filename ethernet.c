@@ -16,19 +16,19 @@
 
 #define BUF_SIZ 65536
 
-char *dest_addr(Eth_h *eth_hdr){
+char *dest_addr(ethernet_hdr *eth_hdr){
         char *str;
         sprintf(str, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X", eth_hdr->dest[0],eth_hdr->dest[1],eth_hdr->dest[2],eth_hdr->dest[3],eth_hdr->dest[4],eth_hdr->dest[5]);
         return str;
 }
 
-char *src_addr(Eth_h *eth_hdr){
+char *src_addr(ethernet_hdr *eth_hdr){
         char *str;
         sprintf(str, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X", eth_hdr->src[0],eth_hdr->src[1],eth_hdr->src[2],eth_hdr->src[3],eth_hdr->src[4],eth_hdr->src[5]);
         return str;
 }
 
-void eth_hdr_dbg(struct ethernet_hdr *eth_header, ssize_t recv_byte){
+void eth_hdr_dbg(ethernet_hdr *eth_header, ssize_t recv_byte){
 
                 // Ethernet Header の解析
         printf("Ethernet Header\n");

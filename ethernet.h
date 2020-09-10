@@ -12,17 +12,17 @@
 
 //typedef struct ethernet_hdr Eth_h;
 
-typedef struct ethernet_hdr
+typedef struct ETHERNET_HEADER
 {
         uint8_t dest[ADDR_LEN];
         uint8_t src[ADDR_LEN];
         uint16_t ethehertype;
-} Eth_h;
+} ethernet_hdr;
 
-char *dest_addr(Eth_h *eth_hdr);
-char *src_addr(Eth_h *eth_hdr);
+char *dest_addr(ethernet_hdr *eth_hdr);
+char *src_addr(ethernet_hdr *eth_hdr);
 char *return_addr(char *address);
 
-void eth_hdr_dbg(struct ethernet_hdr *eth_header, ssize_t byte);
+void eth_hdr_dbg(ethernet_hdr *eth_header, ssize_t byte);
 
 #endif
