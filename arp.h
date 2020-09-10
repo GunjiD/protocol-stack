@@ -5,10 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ethernet.h"
+#include "ip.h"
+
 typedef struct arp_hdr
 {
-        uint16_t hw_addr;
-        uint16_t protocol_addr;
+        uint16_t hw_addr_space;
+        uint16_t protocol_addr_space;
         uint8_t hw_addr_len;
         uint8_t protocol_addr_len;
         uint16_t opcode;
