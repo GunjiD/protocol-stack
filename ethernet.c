@@ -37,7 +37,7 @@ void eth_hdr_dbg(ethernet_hdr *eth_header, ssize_t recv_byte){
                         eth_header->dest[0],eth_header->dest[1],eth_header->dest[2],eth_header->dest[3],eth_header->dest[4],eth_header->dest[5]);
         printf("source address      : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
                         eth_header->src[0],eth_header->src[1],eth_header->src[2],eth_header->src[3],eth_header->src[4],eth_header->src[5]);
-        printf("Packet Type ID : %d\n", eth_header->ethehertype);
+        printf("Packet Type ID : %2x\n", ntohs(eth_header->ethehertype));
         printf("packet %lu bytes\n", recv_byte);
         printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
 }
