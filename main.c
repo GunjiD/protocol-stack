@@ -36,22 +36,23 @@ int main(int argc, char *argv[]){
 
         sock = create_socket("enp9s0");
 
-while(1){
         send_arp_request(sock);
-        break;
+
+while(1){
+
         recv_byte = recvfrom(sock, buffer, BUF_SIZ, 0, &saddr, &saddr_len);
         // 受信したパケットを ethdr にキャストして代入する
         // ethhdr については if_ether.h を参照
         ethernet_hdr *eth_h = (ethernet_hdr*)(buffer);        
         
-//        eth_hdr_dbg(eth_h, recv_byte);
-        
         struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(ethernet_hdr));
 
-        ip_hdr_dbg(ip_h, HEX);
+if(ntohs(eth_h->ethehertype) == 0x0806){
+        eth_hdr_dbg(eth_h, recv_byte);
+//        ip_hdr_dbg(ip_h, HEX);
         ip_hdr_ntoh(ip_h);
         ip_hdr_dbg(ip_h, INTEGER);
-
+}
 }
 
 return 0;
