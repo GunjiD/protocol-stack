@@ -9,9 +9,7 @@
 uint16_t ntohs(uint16_t network_short){
 
     uint16_t tmp = 0;
-    tmp = (network_short >> 0) & 0xff;
-    tmp = tmp << 8;
-    tmp |= (network_short >> 8) & 0xff;
+    tmp = (network_short >> 8) | (network_short << 8);
 
     return tmp;
 }
@@ -58,9 +56,9 @@ void ip_hdr_ntoh(struct ip_hdr *ip_header){
         uint8_t tmp_ip_ver = ip_header->version;
         ip_header->version = ip_header->ihl;
         ip_header->ihl = tmp_ip_ver;
-        ip_header->total_length = htons(ip_header->total_length);
-        ip_header->fragment_offset = htonl(ip_header->fragment_offset);
-        ip_header->hdr_checksum = htons(ip_header->hdr_checksum);
-        ip_header->source_address = htonl(ip_header->source_address);
-        ip_header->destination_address = htonl(ip_header->destination_address);
+        ip_header->total_length = ntohs(ip_header->total_length);
+        ip_header->fragment_offset = ntohl(ip_header->fragment_offset);
+        ip_header->hdr_checksum = ntohs(ip_header->hdr_checksum);
+        ip_header->source_address = ntohl(ip_header->source_address);
+        ip_header->destination_address = ntohl(ip_header->destination_address);
 }
