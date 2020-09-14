@@ -31,7 +31,7 @@ void send_arp_request(int sd){
     memcpy(arp_h.sender_hw_addr, host_mac, 6);
     arp_h.sender_protocol_addr = htonl((uint32_t)0xC0A8009B); //192.168.0.155
     memcpy(arp_h.target_hw_addr, target_mac, 6);
-    arp_h.target_protocol_addr = htonl((uint32_t)0xC0A800FF); //192.168.0.1
+    arp_h.target_protocol_addr = htonl((uint32_t)0xC0A80001); //192.168.0.1
 
 
 //    printf("struct ethernet_hdr size %ld Byte\n", sizeof(ethernet_hdr));
@@ -50,4 +50,32 @@ void send_arp_request(int sd){
     }
 
     printf("transmmit arp %ld Byte\n",send_byte);
+}
+
+void arp_dbg(arp_hdr *arp_h){
+
+        char ip_src[IP_STR_LEN];
+        char ip_dest[IP_STR_LEN];
+
+        ntop(ntohl(arp_h->sender_protocol_addr), ip_src);
+        ntop(ntohl(arp_h->target_protocol_addr), ip_dest);
+
+        printf("ARP Header\n");
+        printf("Hardware address space: %x\n", ntohs(arp_h->hw_addr_space));
+        printf("Protocol address space: %x\n", ntohs(arp_h->protocol_addr_space));
+        printf("Hardware address length : %d Bytes\n", arp_h->hw_addr_len);
+        printf("Protocol address length : %d Bytes\n", arp_h->protocol_addr_len);
+        printf("Op code : %d \n", ntohs(arp_h->opcode));
+        printf("Sender Hardware address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
+            arp_h->sender_hw_addr[0],arp_h->sender_hw_addr[1],
+            arp_h->sender_hw_addr[2],arp_h->sender_hw_addr[3],
+            arp_h->sender_hw_addr[4],arp_h->sender_hw_addr[5]);
+        printf("Sender Protocol address : %s \n", ip_src);
+        printf("Target Hardware address : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X\n",
+            arp_h->target_hw_addr[0],arp_h->target_hw_addr[1],
+            arp_h->target_hw_addr[2],arp_h->target_hw_addr[3],
+            arp_h->target_hw_addr[4],arp_h->target_hw_addr[5]);
+        printf("Target Protocol address : %s \n", ip_dest);
+        printf("__________________________________________________\n");
+
 }

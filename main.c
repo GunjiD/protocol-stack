@@ -36,7 +36,17 @@ int main(int argc, char *argv[]){
 
         sock = create_socket("enp9s0");
 
-        send_arp_request(sock);
+//        send_arp_request(sock);
+
+        uint16_t a = 0x1122;
+
+        printf("%4x\n",a);
+        printf("%4x\n",ntohs(a));
+        uint32_t b = 0x11223344;
+        printf("%8x\n",b);
+        printf("%8x\n",ntohl(b));
+
+        return 0;
 
 while(1){
 
@@ -47,12 +57,19 @@ while(1){
         
         struct ip_hdr *ip_h = (struct ip_hdr*)(buffer + sizeof(ethernet_hdr));
 
+//        eth_hdr_dbg(eth_h, recv_byte);
+
 if(ntohs(eth_h->ethehertype) == 0x0806){
-        eth_hdr_dbg(eth_h, recv_byte);
+        arp_hdr *arp_h = (arp_hdr*)(buffer + sizeof(ethernet_hdr));
+        arp_dbg(arp_h);
+/*
 //        ip_hdr_dbg(ip_h, HEX);
         ip_hdr_ntoh(ip_h);
         ip_hdr_dbg(ip_h, INTEGER);
+*/
+
 }
+
 }
 
 return 0;

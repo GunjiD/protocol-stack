@@ -22,5 +22,6 @@ typedef struct ARP_HEADER
 } __attribute__((packed)) arp_hdr;
 
 void send_arp_request(int sd);
+void arp_dbg(arp_hdr *arp_h);
 
 #endif
