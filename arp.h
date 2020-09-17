@@ -15,9 +15,9 @@ typedef struct ARP_HEADER
         uint8_t hw_addr_len;
         uint8_t protocol_addr_len;
         uint16_t opcode;
-        unsigned char sender_hw_addr[ADDR_LEN];
+        unsigned char sender_hw_addr[MAC_LEN];
         uint32_t sender_protocol_addr;
-        unsigned char target_hw_addr[ADDR_LEN];
+        unsigned char target_hw_addr[MAC_LEN];
         uint32_t target_protocol_addr;
 } __attribute__((packed)) arp_hdr;
 

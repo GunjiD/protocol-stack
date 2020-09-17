@@ -8,14 +8,14 @@
 #include <sys/socket.h>
 
 #define ETH_P_ALL 0x0003
-#define ADDR_LEN 6
+#define MAC_LEN 6
 
 //typedef struct ethernet_hdr Eth_h;
 
 typedef struct ETHERNET_HEADER
 {
-        uint8_t dest[ADDR_LEN];
-        uint8_t src[ADDR_LEN];
+        uint8_t dest[MAC_LEN];
+        uint8_t src[MAC_LEN];
         uint16_t ethehertype;
 } ethernet_hdr;
 
