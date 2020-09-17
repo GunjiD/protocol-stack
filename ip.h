@@ -9,7 +9,7 @@
 
 #include "ethernet.h"
 
-#define IP_STR_LEN 16
+#define IP_CHAR_LEN 16
 #define HEX 0
 #define INTEGER 1
 

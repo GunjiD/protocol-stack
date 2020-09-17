@@ -8,8 +8,8 @@
 
 void ip_hdr_dbg(struct ip_hdr *ip_header, int dump_form){
 
-        char ip_src[IP_STR_LEN];
-        char ip_dest[IP_STR_LEN];
+        char ip_src[IP_CHAR_LEN];
+        char ip_dest[IP_CHAR_LEN];
         unsigned char *hdr = malloc(sizeof(unsigned char) * sizeof(*ip_header));
 
 switch (dump_form){

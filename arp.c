@@ -54,8 +54,8 @@ void send_arp_request(int sd){
 
 void arp_dbg(arp_hdr *arp_h){
 
-        char ip_src[IP_STR_LEN];
-        char ip_dest[IP_STR_LEN];
+        char ip_src[IP_CHAR_LEN];
+        char ip_dest[IP_CHAR_LEN];
 
         ntop(ntohl(arp_h->sender_protocol_addr), ip_src);
         ntop(ntohl(arp_h->target_protocol_addr), ip_dest);
