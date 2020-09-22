@@ -18,8 +18,6 @@
 #include "inet.h"
 #include "arp.h"
 
-#define BUF_SIZ 65535
-
 int create_socket(char *interface_name);
 
 #endif
