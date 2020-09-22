@@ -10,6 +10,8 @@
 #define ETH_P_ALL 0x0003
 #define MAC_LEN 6
 
+#define ETH_T_ARP 0x0806
+
 //typedef struct ethernet_hdr Eth_h;
 
 typedef struct ETHERNET_HEADER
