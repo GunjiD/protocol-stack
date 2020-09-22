@@ -15,21 +15,6 @@
 #include "inet.h"
 #include "arp.h"
 
-/*
-int main(int argc, char *argv[]){
-        
-        // プロトコルの情報が格納される
-        struct sockaddr saddr;
-        socklen_t saddr_len = sizeof(saddr);
-
-        // パケットを受信する
-        unsigned char *buffer = (unsigned char *) malloc(BUF_SIZ);
-        memset(buffer,0, BUF_SIZ);
-
-        sock = create_socket("enp9s0");
-}
-*/
-
 int create_socket(char *interface_name){
 
         int soc;

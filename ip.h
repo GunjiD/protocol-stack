@@ -14,7 +14,6 @@
 #define INTEGER 1
 #define BUF_SIZ 65535
 
-
 typedef struct ip_hdr
 {
     uint8_t version:4;
