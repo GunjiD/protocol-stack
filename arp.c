@@ -45,13 +45,13 @@ void send_arp_request(int sd, uint32_t host_ip, uint32_t target_ip){
 
 //    for(int i = 0; i < 42; i++) printf("%02x ",buff[i]);
 
-    ssize_t send_byte = send(sd, buff, 44, 0);
+    ssize_t send_byte = send(sd, buff, sizeof(ethernet_hdr)+sizeof(arp_hdr), 0);
 
     if(send_byte == -1){
         perror("send");
     }
 
-    printf("transmmit arp %ld Byte\n",send_byte);
+//    printf("transmmit arp %ld Byte\n",send_byte);
 }
 
 void arp_dbg(arp_hdr *arp_h){
