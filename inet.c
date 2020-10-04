@@ -5,6 +5,24 @@
 #include <stdlib.h>
 #include "ip.h"
 
+int host_byte_order(void){
+    
+    int x=0x00000001;
+    
+    if (*(char*)&x) {
+            return __LITTLE_ENDIAN;
+        }else{
+            return __BIG_ENDIAN;
+        }
+}
+//  this implementation referrd to byteswap.h
+uint16_t byte_swap16(uint16_t x){
+    return (x & 0x00ff) << 8 | (x & 0xff00) >> 8;
+}
+
+uint32_t byte_swap32(uint32_t x){
+    return (x & 0x000000ff) << 24 | (x & 0x0000ff00) << 8 | (x & 0x00ff0000) >> 8 | (x & 0xff000000) >> 24;
+}
 
 uint16_t ntohs(uint16_t network_short){
 
@@ -16,14 +34,11 @@ uint16_t ntohs(uint16_t network_short){
 
 uint32_t ntohl(uint32_t network_long){
 
-    uint32_t tmp = 0;
-    for(int i = 0; i < 4; i++){
-    tmp |= (network_long >> i * 8) &0xff;
-    if(i == 3) break;
-    tmp = tmp << 8;
+    if(host_byte_order() == LITTLE_ENDIAN){
+        return byte_swap32(network_long);
+    }else{
+        return network_long;
     }
-
-    return tmp;    
 }
 
 uint16_t htons(uint16_t host_short){
