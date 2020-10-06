@@ -26,15 +26,16 @@ uint32_t byte_swap32(uint32_t x){
 
 uint16_t ntohs(uint16_t network_short){
 
-    uint16_t tmp = 0;
-    tmp = (network_short >> 8) | (network_short << 8);
-
-    return tmp;
+    if(host_byte_order() == __LITTLE_ENDIAN){
+        return byte_swap16(network_short);
+    }else{
+        return network_short;
+    }
 }
 
 uint32_t ntohl(uint32_t network_long){
 
-    if(host_byte_order() == LITTLE_ENDIAN){
+    if(host_byte_order() == __LITTLE_ENDIAN){
         return byte_swap32(network_long);
     }else{
         return network_long;
@@ -42,23 +43,20 @@ uint32_t ntohl(uint32_t network_long){
 }
 
 uint16_t htons(uint16_t host_short){
-    uint16_t tmp = 0;
-    tmp = (host_short << 0) & 0xff00;
-    tmp = tmp >> 8;
-    tmp |= (host_short << 8) & 0xff00;
 
-    return tmp;
+    if(host_byte_order() == __LITTLE_ENDIAN){
+        return byte_swap16(host_short);
+    }else{
+        return host_short;
+    }
 }
 uint32_t htonl(uint32_t host_long){
 
-    uint32_t tmp = 0;
-    for(int i = 0; i < 4; i++){
-    tmp |= (host_long << i * 8) &0xff000000;
-    if(i == 3) break;
-    tmp = tmp >> 8;
+    if(host_byte_order() == __LITTLE_ENDIAN){
+        return byte_swap32(host_long);
+    }else{
+        return host_long;
     }
-
-    return tmp;    
 }
 
 void ntop(u_int32_t src, char *dest){
