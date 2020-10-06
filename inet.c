@@ -59,10 +59,36 @@ uint32_t htonl(uint32_t host_long){
     }
 }
 
-void ntop(u_int32_t src, char *dest){
+int ntop(u_int32_t src, char *dest){
     u_char addr[16];
     sprintf(addr,"%u.%u.%u.%u",(src >>  24) & 0xFF,(src >>  16) & 0xFF,(src >>  8) & 0xFF,(src >>  0) & 0xFF);
-    strcpy(dest, addr);    
+    strcpy(dest, addr);
+    return 1;
+}
+
+int pton(char *src, void *dst){
+
+    uint32_t *addr = (uint32_t *)dst;
+
+    u_char part_of_ip[3];
+    int tmp = 0;
+    int i = 0;
+    int shift = 0;
+    
+    do{
+        i++;
+        if(src[i] == '.' || src[i] == '\0'){
+        memcpy(part_of_ip, src + tmp, i - tmp);
+        if(shift <= 24){
+            *addr += (uint32_t)(atoi(part_of_ip) << 24 - shift);
+        }
+        shift+=8;
+        memset(part_of_ip, '\0', sizeof(part_of_ip));
+        tmp = i+1;
+        }
+    }while (i < strlen(src));
+
+    return 1;
 }
 
 void ip_hdr_ntoh(struct ip_hdr *ip_header){

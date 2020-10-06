@@ -20,9 +20,18 @@ int main(int argc, char *argv[]){
 
         sock = create_socket("enp9s0");
 
-        uint32_t host_ip = 0xC0A8009B;  
-        uint32_t target_ip = 0xC0A80001;
-                uint32_t ip_table[3] = {0xC0A80001, 0xC0A80002, 0xC0A80008};
+        uint32_t host_ip = 0;
+        uint32_t target_ip = 0;
+        uint32_t ip_table[3] = {0};
+
+        pton("192.168.0.155", &host_ip);
+
+        pton("192.168.0.1", &target_ip);
+
+        pton("192.168.0.1", &ip_table[0]);
+        pton("192.168.0.2", &ip_table[1]);
+        pton("192.168.0.8", &ip_table[2]);
+        
         int arp_table_size = 3; 
         arp_hdr arp_table[arp_table_size];
 
